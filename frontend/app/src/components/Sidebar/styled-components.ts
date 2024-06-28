@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * Edits made by W.Berkshire for Maronda Homes Data Science WebApp
- *
  */
 
 import { transparentize } from "color2k"
@@ -39,7 +36,7 @@ export const StyledSidebar = styled.section<StyledSidebarProps>(
       // Nudge the sidebar by 2px so the header decoration doesn't go below it
       position: "relative",
       top: adjustTop ? "2px" : "0px",
-      backgroundColor: "#009844", // Custom green color
+      backgroundColor: theme.colors.bgColor,
       zIndex: theme.zIndices.header + 1,
 
       minWidth,
@@ -103,8 +100,14 @@ export interface StyledSidebarNavLinkProps {
 
 export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
   ({ isActive, theme }) => {
-    const activeBgColor = "#00662E" // Custom dark green color for active state
-    const textColor = "#FFFFFF" // Custom white color for text
+    const isLightTheme = hasLightBackgroundColor(theme)
+    const activeSvgColor = isLightTheme
+      ? theme.colors.gray90
+      : theme.colors.gray10
+    const svgColor = isLightTheme ? theme.colors.gray60 : theme.colors.gray70
+    const activeBgColor = isLightTheme
+      ? theme.colors.darkenedBgMix15
+      : transparentize(theme.colors.gray100, 0.6)
 
     const defaultPageLinkStyles = {
       textDecoration: "none",
@@ -127,11 +130,11 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       marginBottom: theme.spacing.threeXS,
       lineHeight: theme.lineHeights.menuItem,
 
-      color: textColor, // Custom text color
+      color: isLightTheme ? theme.colors.gray80 : theme.colors.gray40,
       backgroundColor: isActive ? activeBgColor : "transparent",
 
       [StyledMaterialIcon as any]: {
-        color: textColor, // Custom icon color
+        color: isActive ? activeSvgColor : svgColor,
         fontWeight: isActive ? 600 : 400,
       },
 
@@ -148,7 +151,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:focus-visible": {
-        backgroundColor: activeBgColor,
+        backgroundColor: theme.colors.darkenedBgMix15,
       },
 
       [`@media print`]: {
@@ -159,11 +162,17 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
 )
 
 export const StyledSidebarLinkText = styled.span<StyledSidebarNavLinkProps>(
-  ({ isActive }) => {
-    const textColor = "#FFFFFF" // Custom white color for text
+  ({ isActive, theme }) => {
+    const isLightTheme = hasLightBackgroundColor(theme)
+    const defaultColor = isLightTheme
+      ? theme.colors.gray80
+      : theme.colors.gray50
+    const activeColor = isLightTheme
+      ? theme.colors.gray90
+      : theme.colors.gray10
 
     return {
-      color: textColor,
+      color: isActive ? activeColor : defaultColor,
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
