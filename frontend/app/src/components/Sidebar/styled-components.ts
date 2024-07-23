@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * Edits made by W.Berkshire for Maronda Homes Data Science WebApp
- *
  */
 
 import { transparentize } from "color2k"
@@ -24,6 +21,22 @@ import {
   hasLightBackgroundColor,
 } from "@streamlit/lib/src/theme/utils"
 import { StyledMaterialIcon } from "@streamlit/lib/src/components/shared/Icon/Material/styled-components"
+
+// Check for custom text color & handle colors in SidebarNav accordingly
+const conditionalCustomColor = (
+  theme: any,
+  customThemeColor: string,
+  defaultThemeColor: string
+): string => {
+  let customTextColor = theme.colors.bodyText !== theme.colors.gray10
+
+  if (hasLightBackgroundColor(theme)) {
+    customTextColor = theme.colors.bodyText !== theme.colors.gray85
+  }
+
+  return customTextColor ? customThemeColor : defaultThemeColor
+}
+
 export interface StyledSidebarProps {
   isCollapsed: boolean
   adjustTop: boolean
@@ -31,7 +44,7 @@ export interface StyledSidebarProps {
 }
 
 export const StyledSidebar = styled.section<StyledSidebarProps>(
-  ({ theme, isCollapsed, adjustTop, sidebarWidth }) => {
+  ({ isCollapsed, adjustTop, sidebarWidth }) => {
     const minWidth = isCollapsed ? 0 : Math.min(244, window.innerWidth)
     const maxWidth = isCollapsed ? 0 : Math.min(550, window.innerWidth * 0.9)
 
@@ -39,8 +52,9 @@ export const StyledSidebar = styled.section<StyledSidebarProps>(
       // Nudge the sidebar by 2px so the header decoration doesn't go below it
       position: "relative",
       top: adjustTop ? "2px" : "0px",
-      backgroundColor: "#009844", // Custom green color
-      zIndex: theme.zIndices.header + 1,
+      backgroundColor: "#009844", // Custom green background color
+      color: "white", // White text color
+      zIndex: 10, // Example zIndex
 
       minWidth,
       maxWidth,
@@ -51,7 +65,7 @@ export const StyledSidebar = styled.section<StyledSidebarProps>(
         outline: "none",
       },
 
-      [`@media (max-width: ${theme.breakpoints.md})`]: {
+      [`@media (max-width: 768px)`]: {
         boxShadow: `-2rem 0 2rem 2rem ${
           isCollapsed ? "transparent" : "#00000029"
         }`,
@@ -102,10 +116,7 @@ export interface StyledSidebarNavLinkProps {
 }
 
 export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
-  ({ isActive, theme }) => {
-    const activeBgColor = "#00662E" // Custom dark green color for active state
-    const textColor = "#FFFFFF" // Custom white color for text
-
+  ({ isActive }) => {
     const defaultPageLinkStyles = {
       textDecoration: "none",
       fontWeight: isActive ? 600 : 400,
@@ -116,27 +127,21 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      gap: theme.spacing.sm,
-      borderRadius: theme.spacing.twoXS,
+      gap: "8px",
+      borderRadius: "8px",
+      paddingLeft: "8px",
+      paddingRight: "8px",
+      marginLeft: "32px",
+      marginRight: "32px",
+      marginTop: "4px",
+      marginBottom: "4px",
+      lineHeight: "1.5",
 
-      paddingLeft: theme.spacing.sm,
-      paddingRight: theme.spacing.sm,
-      marginLeft: theme.spacing.twoXL,
-      marginRight: theme.spacing.twoXL,
-      marginTop: theme.spacing.threeXS,
-      marginBottom: theme.spacing.threeXS,
-      lineHeight: theme.lineHeights.menuItem,
-
-      color: textColor, // Custom text color
-      backgroundColor: isActive ? activeBgColor : "transparent",
-
-      [StyledMaterialIcon as any]: {
-        color: textColor, // Custom icon color
-        fontWeight: isActive ? 600 : 400,
-      },
+      color: "white", // White text color
+      backgroundColor: isActive ? "#007a34" : "transparent", // Darker green for active background
 
       "&:hover": {
-        backgroundColor: activeBgColor,
+        backgroundColor: "#008c39", // Slightly lighter green for hover
       },
 
       "&:active,&:visited,&:hover": {
@@ -148,29 +153,27 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:focus-visible": {
-        backgroundColor: activeBgColor,
+        backgroundColor: "#007a34", // Same as active background color for focus
       },
 
       [`@media print`]: {
-        paddingLeft: theme.spacing.none,
+        paddingLeft: 0,
       },
     }
   }
 )
 
-export const StyledSidebarLinkText = styled.span<StyledSidebarNavLinkProps>(
-  ({ isActive }) => {
-    const textColor = "#FFFFFF" // Custom white color for text
-
-    return {
-      color: textColor,
-      overflow: "hidden",
-      whiteSpace: "nowrap",
-      textOverflow: "ellipsis",
-      display: "table-cell",
-    }
+export const StyledSidebarLinkText = styled.span(() => {
+  return {
+    color: "white", // White text color
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    display: "table-cell",
   }
-)
+})
+
+
 
 export interface StyledSidebarUserContentProps {
   hasPageNavAbove: boolean
@@ -255,11 +258,15 @@ export const StyledSidebarOpenContainer =
   )
 
 export const StyledOpenSidebarButton = styled.div(({ theme }) => {
-  const isLightTheme = hasLightBackgroundColor(theme)
+  const color = conditionalCustomColor(
+    theme,
+    theme.colors.bodyText,
+    theme.colors.sidebarControlColor
+  )
 
   return {
     zIndex: theme.zIndices.header,
-    color: isLightTheme ? theme.colors.gray70 : theme.colors.bodyText,
+    color,
 
     button: {
       "&:hover": {
@@ -280,13 +287,17 @@ export interface StyledCollapseSidebarButtonProps {
 export const StyledCollapseSidebarButton =
   styled.div<StyledCollapseSidebarButtonProps>(
     ({ showSidebarCollapse, theme }) => {
-      const isLightTheme = hasLightBackgroundColor(theme)
+      const color = conditionalCustomColor(
+        theme,
+        theme.colors.bodyText,
+        theme.colors.sidebarControlColor
+      )
 
       return {
         display: showSidebarCollapse ? "inline" : "none",
         transition: "left 300ms",
         transitionDelay: "left 300ms",
-        color: isLightTheme ? theme.colors.gray70 : theme.colors.bodyText,
+        color,
         lineHeight: "0",
 
         [`@media print`]: {
@@ -301,12 +312,16 @@ export const StyledCollapseSidebarButton =
   )
 
 export const StyledSidebarNavSectionHeader = styled.header(({ theme }) => {
-  const isLightTheme = hasLightBackgroundColor(theme)
+  const color = conditionalCustomColor(
+    theme,
+    transparentize(theme.colors.bodyText, 0.15),
+    theme.colors.navTextColor
+  )
 
   return {
     fontSize: theme.fontSizes.sm,
     fontWeight: theme.fontWeights.bold,
-    color: isLightTheme ? theme.colors.gray80 : theme.colors.gray60,
+    color,
     lineHeight: theme.lineHeights.table,
     paddingRight: theme.spacing.sm,
     marginLeft: theme.spacing.twoXL,
@@ -317,12 +332,16 @@ export const StyledSidebarNavSectionHeader = styled.header(({ theme }) => {
 })
 
 export const StyledViewButton = styled.button(({ theme }) => {
-  const isLightTheme = hasLightBackgroundColor(theme)
+  const color = conditionalCustomColor(
+    theme,
+    theme.colors.bodyText,
+    theme.colors.navActiveTextColor
+  )
 
   return {
     fontSize: theme.fontSizes.sm,
     lineHeight: "1.4rem",
-    color: isLightTheme ? theme.colors.gray90 : theme.colors.gray10,
+    color,
     backgroundColor: theme.colors.transparent,
     border: "none",
     borderRadius: theme.radii.lg,
@@ -335,9 +354,7 @@ export const StyledViewButton = styled.button(({ theme }) => {
       boxShadow: "none",
     },
     "&:hover": {
-      backgroundColor: isLightTheme
-        ? theme.colors.darkenedBgMix15
-        : transparentize(theme.colors.gray100, 0.6),
+      backgroundColor: theme.colors.darkenedBgMix25,
     },
   }
 })
