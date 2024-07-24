@@ -1,9 +1,26 @@
+/**
+ * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { transparentize } from "color2k"
 import styled from "@emotion/styled"
 import {
   getWrappedHeadersStyle,
   hasLightBackgroundColor,
 } from "@streamlit/lib/src/theme/utils"
+import { StyledMaterialIcon } from "@streamlit/lib/src/components/shared/Icon/Material/styled-components"
 
 // Check for custom text color & handle colors in SidebarNav accordingly
 const conditionalCustomColor = (
@@ -27,7 +44,7 @@ export interface StyledSidebarProps {
 }
 
 export const StyledSidebar = styled.section<StyledSidebarProps>(
-  ({ isCollapsed, adjustTop, sidebarWidth }) => {
+  ({ theme, isCollapsed, adjustTop, sidebarWidth }) => {
     const minWidth = isCollapsed ? 0 : Math.min(244, window.innerWidth)
     const maxWidth = isCollapsed ? 0 : Math.min(550, window.innerWidth * 0.9)
 
@@ -35,9 +52,8 @@ export const StyledSidebar = styled.section<StyledSidebarProps>(
       // Nudge the sidebar by 2px so the header decoration doesn't go below it
       position: "relative",
       top: adjustTop ? "2px" : "0px",
-      backgroundColor: "#009844", // Custom green background color
-      color: "white", // White text color
-      zIndex: 10, // Example zIndex
+      backgroundColor: theme.colors.bgColor,
+      zIndex: theme.zIndices.header + 1,
 
       minWidth,
       maxWidth,
@@ -48,7 +64,7 @@ export const StyledSidebar = styled.section<StyledSidebarProps>(
         outline: "none",
       },
 
-      [`@media (max-width: 768px)`]: {
+      [`@media (max-width: ${theme.breakpoints.md})`]: {
         boxShadow: `-2rem 0 2rem 2rem ${
           isCollapsed ? "transparent" : "#00000029"
         }`,
@@ -99,7 +115,23 @@ export interface StyledSidebarNavLinkProps {
 }
 
 export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
-  ({ isActive }) => {
+  ({ isActive, theme }) => {
+    const color = conditionalCustomColor(
+      theme,
+      theme.colors.bodyText,
+      theme.colors.navTextColor
+    )
+    const svgColor = conditionalCustomColor(
+      theme,
+      theme.colors.fadedText60,
+      theme.colors.navIconColor
+    )
+    const activeSvgColor = conditionalCustomColor(
+      theme,
+      theme.colors.bodyText,
+      theme.colors.navActiveTextColor
+    )
+
     const defaultPageLinkStyles = {
       textDecoration: "none",
       fontWeight: isActive ? 600 : 400,
@@ -110,21 +142,26 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      gap: "8px",
-      borderRadius: "8px",
-      paddingLeft: "8px",
-      paddingRight: "8px",
-      marginLeft: "32px",
-      marginRight: "32px",
-      marginTop: "4px",
-      marginBottom: "4px",
-      lineHeight: "1.5",
+      gap: theme.spacing.sm,
+      borderRadius: theme.radii.lg,
+      paddingLeft: theme.spacing.sm,
+      paddingRight: theme.spacing.sm,
+      marginLeft: theme.spacing.twoXL,
+      marginRight: theme.spacing.twoXL,
+      marginTop: theme.spacing.threeXS,
+      marginBottom: theme.spacing.threeXS,
+      lineHeight: theme.lineHeights.menuItem,
 
-      color: "white", // White text color
-      backgroundColor: isActive ? "#007a34" : "transparent", // Darker green for active background
+      color,
+      backgroundColor: isActive ? theme.colors.darkenedBgMix25 : "transparent",
+
+      [StyledMaterialIcon as any]: {
+        color: isActive ? activeSvgColor : svgColor,
+        fontWeight: isActive ? 600 : 400,
+      },
 
       "&:hover": {
-        backgroundColor: "#008c39", // Slightly lighter green for hover
+        backgroundColor: transparentize(theme.colors.darkenedBgMix25, 0.1),
       },
 
       "&:active,&:visited,&:hover": {
@@ -136,24 +173,31 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:focus-visible": {
-        backgroundColor: "#007a34", // Same as active background color for focus
+        backgroundColor: theme.colors.darkenedBgMix15,
       },
 
       [`@media print`]: {
-        paddingLeft: 0,
+        paddingLeft: theme.spacing.none,
       },
     }
   }
 )
 
-export interface StyledSidebarLinkTextProps {
-  isActive: boolean
-}
+export const StyledSidebarLinkText = styled.span<StyledSidebarNavLinkProps>(
+  ({ isActive, theme }) => {
+    const defaultColor = conditionalCustomColor(
+      theme,
+      transparentize(theme.colors.bodyText, 0.2),
+      theme.colors.navTextColor
+    )
+    const activeColor = conditionalCustomColor(
+      theme,
+      theme.colors.bodyText,
+      theme.colors.navActiveTextColor
+    )
 
-export const StyledSidebarLinkText = styled.span<StyledSidebarLinkTextProps>(
-  ({ isActive }) => {
     return {
-      color: isActive ? "white" : "white", // Use isActive prop
+      color: isActive ? activeColor : defaultColor,
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
@@ -291,83 +335,62 @@ export const StyledCollapseSidebarButton =
           display: "none",
         },
 
-        [`@media (max-width: ${theme.breakpoints.md})`]: {
-          display: "none",
+        [`@media (max-width: ${theme.breakpoints.sm})`]: {
+          display: "inline",
         },
       }
     }
   )
 
-export interface StyledSidebarCollapsedControlProps {
-  isCollapsed: boolean
-  chevronDownshift: number
-}
-
-export const StyledSidebarCollapsedControl =
-  styled.div<StyledSidebarCollapsedControlProps>(
-    ({ isCollapsed, chevronDownshift, theme }) => ({
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "start",
-      position: "fixed",
-      top: chevronDownshift ? `${chevronDownshift}px` : theme.spacing.xl,
-      left: isCollapsed ? theme.spacing.twoXL : `-${theme.spacing.twoXL}`,
-      zIndex: theme.zIndices.header,
-
-      transition: "left 300ms",
-      transitionDelay: "left 300ms",
-
-      button: {
-        "&:hover": {
-          backgroundColor: theme.colors.darkenedBgMix25,
-        },
-      },
-
-      [`@media print`]: {
-        display: "none",
-      },
-
-      [`@media (max-width: ${theme.breakpoints.md})`]: {
-        display: "none",
-      },
-    })
-  )
-
-export const StyledExitSidebarExpander = styled.div(({ theme }) => {
+export const StyledSidebarNavSectionHeader = styled.header(({ theme }) => {
   const color = conditionalCustomColor(
     theme,
-    theme.colors.bodyText,
-    theme.colors.sidebarControlColor
+    transparentize(theme.colors.bodyText, 0.15),
+    theme.colors.navTextColor
   )
 
   return {
+    fontSize: theme.fontSizes.sm,
+    fontWeight: theme.fontWeights.bold,
     color,
-    lineHeight: "0",
+    lineHeight: theme.lineHeights.table,
+    paddingRight: theme.spacing.sm,
+    marginLeft: theme.spacing.twoXL,
+    marginRight: theme.spacing.twoXL,
+    marginTop: theme.spacing.sm,
+    marginBottom: theme.spacing.twoXS,
+  }
+})
 
-    [`@media print`]: {
-      display: "none",
+export const StyledViewButton = styled.button(({ theme }) => {
+  const color = conditionalCustomColor(
+    theme,
+    theme.colors.bodyText,
+    theme.colors.navActiveTextColor
+  )
+
+  return {
+    fontSize: theme.fontSizes.sm,
+    lineHeight: "1.4rem",
+    color,
+    backgroundColor: theme.colors.transparent,
+    border: "none",
+    borderRadius: theme.radii.lg,
+    marginTop: theme.spacing.twoXS,
+    marginLeft: theme.spacing.xl,
+    padding: `${theme.spacing.threeXS} ${theme.spacing.sm}`,
+    "&:hover, &:active, &:focus": {
+      border: "none",
+      outline: "none",
+      boxShadow: "none",
+    },
+    "&:hover": {
+      backgroundColor: theme.colors.darkenedBgMix25,
     },
   }
 })
 
-export const StyledSidebarNavSectionHeader = styled.div(({ theme }) => ({
-  //fontSize: theme.fontSizes.smDefault,
-  fontWeight: 600,
-  color: "white",
+export const StyledSidebarNavSeparator = styled.div(({ theme }) => ({
   paddingTop: theme.spacing.lg,
-  paddingBottom: theme.spacing.md,
-  paddingLeft: theme.spacing.twoXL,
-  paddingRight: theme.spacing.twoXL,
-  textTransform: "uppercase",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-}))
-
-export const StyledSidebarNavSectionDivider = styled.hr(({ theme }) => ({
-  marginTop: theme.spacing.xs,
-  marginBottom: theme.spacing.lg,
-  marginLeft: theme.spacing.twoXL,
-  marginRight: theme.spacing.twoXL,
-  border: "none",
-  borderBottom: `1px solid ${transparentize(theme.colors.fadedText40, 0.3)}`,
+  borderBottom: `1px solid ${theme.colors.fadedText10}`,
 }))
