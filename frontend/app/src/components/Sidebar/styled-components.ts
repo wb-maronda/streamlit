@@ -52,7 +52,9 @@ export const StyledSidebar = styled.section<StyledSidebarProps>(
       // Nudge the sidebar by 2px so the header decoration doesn't go below it
       position: "relative",
       top: adjustTop ? "2px" : "0px",
-      backgroundColor: theme.colors.bgColor,
+      backgroundColor: "#009844", // Custom green background color
+      color: "white", // White text color
+      //zIndex: 10, // Example zIndex
       zIndex: theme.zIndices.header + 1,
 
       minWidth,
