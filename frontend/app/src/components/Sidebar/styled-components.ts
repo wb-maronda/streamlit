@@ -118,11 +118,11 @@ export interface StyledSidebarNavLinkProps {
 
 export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
   ({ isActive, theme }) => {
-    const color = conditionalCustomColor(
-      theme,
-      theme.colors.bodyText,
-      theme.colors.navTextColor
-    )
+    // const color = conditionalCustomColor(
+    //   theme,
+    //   theme.colors.bodyText,
+    //   theme.colors.navTextColor
+    // )
     const svgColor = conditionalCustomColor(
       theme,
       theme.colors.fadedText60,
@@ -154,8 +154,8 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       marginBottom: theme.spacing.threeXS,
       lineHeight: theme.lineHeights.menuItem,
 
-      color,
-      backgroundColor: isActive ? theme.colors.darkenedBgMix25 : "transparent",
+      color: "white",
+      backgroundColor: isActive ? "#007a34" : "transparent",
 
       [StyledMaterialIcon as any]: {
         color: isActive ? activeSvgColor : svgColor,
