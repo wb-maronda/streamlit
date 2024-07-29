@@ -186,20 +186,20 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
 )
 
 export const StyledSidebarLinkText = styled.span<StyledSidebarNavLinkProps>(
-  ({ isActive, theme }) => {
-    const defaultColor = conditionalCustomColor(
-      theme,
-      transparentize(theme.colors.bodyText, 0.2),
-      theme.colors.navTextColor
-    )
-    const activeColor = conditionalCustomColor(
-      theme,
-      theme.colors.bodyText,
-      theme.colors.navActiveTextColor
-    )
+  ({ isActive }) => {
+    // const defaultColor = conditionalCustomColor(
+    //   theme,
+    //   transparentize(theme.colors.bodyText, 0.2),
+    //   theme.colors.navTextColor
+    // )
+    // const activeColor = conditionalCustomColor(
+    //   theme,
+    //   theme.colors.bodyText,
+    //   theme.colors.navActiveTextColor
+    // )
 
     return {
-      color: isActive ? activeColor : defaultColor,
+      color: isActive ? "white" : "white",
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
