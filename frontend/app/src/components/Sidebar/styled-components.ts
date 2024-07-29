@@ -163,7 +163,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:hover": {
-        backgroundColor: transparentize(theme.colors.darkenedBgMix25, 0.1),
+        backgroundColor: transparentize("black", 0.1),
       },
 
       "&:active,&:visited,&:hover": {
@@ -175,7 +175,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:focus-visible": {
-        backgroundColor: theme.colors.darkenedBgMix15,
+        backgroundColor: "lime",
       },
 
       [`@media print`]: {
@@ -303,7 +303,7 @@ export const StyledOpenSidebarButton = styled.div(({ theme }) => {
 
     button: {
       "&:hover": {
-        backgroundColor: theme.colors.darkenedBgMix25,
+        backgroundColor: "cyan",
       },
     },
 
@@ -387,7 +387,7 @@ export const StyledViewButton = styled.button(({ theme }) => {
       boxShadow: "none",
     },
     "&:hover": {
-      backgroundColor: theme.colors.darkenedBgMix25,
+      backgroundColor: "red",
     },
   }
 })
