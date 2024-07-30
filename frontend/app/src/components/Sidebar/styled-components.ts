@@ -163,7 +163,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:hover": {
-        backgroundColor: transparentize("black", 0.1),
+        backgroundColor: transparentize("#274e13", 0.1),
       },
 
       "&:active,&:visited,&:hover": {
@@ -175,7 +175,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:focus-visible": {
-        backgroundColor: "lime",
+        backgroundColor: "red",
       },
 
       [`@media print`]: {
@@ -303,7 +303,7 @@ export const StyledOpenSidebarButton = styled.div(({ theme }) => {
 
     button: {
       "&:hover": {
-        backgroundColor: "cyan",
+        backgroundColor: "red",
       },
     },
 
