@@ -303,7 +303,7 @@ export const StyledOpenSidebarButton = styled.div(({ theme }) => {
 
     button: {
       "&:hover": {
-        backgroundColor: "red",
+        backgroundColor: "#37b859",
       },
     },
 
@@ -387,7 +387,7 @@ export const StyledViewButton = styled.button(({ theme }) => {
       boxShadow: "none",
     },
     "&:hover": {
-      backgroundColor: "red",
+      backgroundColor: "#37b859",
     },
   }
 })
