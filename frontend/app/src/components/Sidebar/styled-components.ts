@@ -163,7 +163,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:hover": {
-        backgroundColor: transparentize("#274e13", 0.1),
+        backgroundColor: transparentize("#006a2a", 0.1),
       },
 
       "&:active,&:visited,&:hover": {
