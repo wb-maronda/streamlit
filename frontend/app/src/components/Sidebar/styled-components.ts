@@ -12,11 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * Changes made by W.Berkshire denoted by X on column 103
  */
 
 import styled from "@emotion/styled"
 import { transparentize } from "color2k"
-
 import { StyledMaterialIcon } from "@streamlit/lib/src/components/shared/Icon/Material/styled-components"
 import {
   getWrappedHeadersStyle,
@@ -53,7 +53,8 @@ export const StyledSidebar = styled.section<StyledSidebarProps>(
       position: "relative",
       // Nudge the sidebar by 2px so the header decoration doesn't go below it
       top: adjustTop ? theme.sizes.headerDecorationHeight : theme.spacing.none,
-      backgroundColor: theme.colors.bgColor,
+      backgroundColor: "#009844", // Custom green background color                                    X
+      color: "white", // White text color                                                             X
       zIndex: theme.zIndices.header + 1,
 
       minWidth,
@@ -107,11 +108,11 @@ export interface StyledSidebarNavLinkProps {
 
 export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
   ({ theme, isActive }) => {
-    const color = conditionalCustomColor(
-      theme,
-      theme.colors.bodyText,
-      theme.colors.navTextColor
-    )
+    // const color = conditionalCustomColor(                                                          X
+    //   theme,                                                                                       X
+    //   theme.colors.bodyText,                                                                       X
+    //   theme.colors.navTextColor                                                                    X
+    // )                                                                                              X
     const svgColor = conditionalCustomColor(
       theme,
       theme.colors.fadedText60,
@@ -143,8 +144,8 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       marginBottom: theme.spacing.threeXS,
       lineHeight: theme.lineHeights.menuItem,
 
-      color,
-      backgroundColor: isActive ? theme.colors.darkenedBgMix25 : "transparent",
+      color: "white", //                                                                               X
+      backgroundColor: isActive ? "#007a34" : "transparent", //                                      X
 
       [StyledMaterialIcon as any]: {
         color: isActive ? activeSvgColor : svgColor,
@@ -154,7 +155,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:hover": {
-        backgroundColor: transparentize(theme.colors.darkenedBgMix25, 0.1),
+        backgroundColor: transparentize("#006a2a", 0.1), //                                          X
       },
 
       "&:active,&:visited,&:hover": {
@@ -166,7 +167,7 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
       },
 
       "&:focus-visible": {
-        backgroundColor: theme.colors.darkenedBgMix15,
+        backgroundColor: "red", //                                                                    X
       },
 
       [`@media print`]: {
@@ -177,20 +178,20 @@ export const StyledSidebarNavLink = styled.a<StyledSidebarNavLinkProps>(
 )
 
 export const StyledSidebarLinkText = styled.span<StyledSidebarNavLinkProps>(
-  ({ isActive, theme }) => {
-    const defaultColor = conditionalCustomColor(
-      theme,
-      transparentize(theme.colors.bodyText, 0.2),
-      theme.colors.navTextColor
-    )
-    const activeColor = conditionalCustomColor(
-      theme,
-      theme.colors.bodyText,
-      theme.colors.navActiveTextColor
-    )
+  ({ isActive }) => {
+    // const defaultColor = conditionalCustomColor(                                                   X
+    //   theme,                                                                                       X
+    //   transparentize(theme.colors.bodyText, 0.2),                                                  X
+    //   theme.colors.navTextColor                                                                    X
+    // )                                                                                              X
+    // const activeColor = conditionalCustomColor(                                                    X
+    //   theme,                                                                                       X
+    //   theme.colors.bodyText,                                                                       X
+    //   theme.colors.navActiveTextColor                                                              X
+    // )                                                                                              X
 
     return {
-      color: isActive ? activeColor : defaultColor,
+      color: isActive ? "white" : "white", //                                                         X
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
@@ -322,7 +323,7 @@ export const StyledOpenSidebarButton = styled.div(({ theme }) => {
 
     button: {
       "&:hover": {
-        backgroundColor: theme.colors.darkenedBgMix25,
+        backgroundColor: "#37b859", //                                                                X
       },
     },
 
@@ -406,7 +407,7 @@ export const StyledViewButton = styled.button(({ theme }) => {
       boxShadow: "none",
     },
     "&:hover": {
-      backgroundColor: theme.colors.darkenedBgMix25,
+      backgroundColor: "#37b859", //                                                                  X
     },
   }
 })
